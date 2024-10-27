@@ -11,10 +11,13 @@ function ChooseAvailability() {
   const [selectedCells, setSelectedCells] = useState(new Set());
   const [isSelecting, setIsSelecting] = useState(false);
 
+  //grabs dates from range passed by ChooseDateTime
   const getDatesInRange = (start, end) => {
     const date = new Date(start);
     const endDate = new Date(end);
     const dates = [];
+    startDate.setHours(0, 0, 0, 0);
+    endDate.setHours(0, 0, 0, 0);
 
     while (date <= endDate) {
       dates.push(new Date(date).toISOString().split('T')[0]);
@@ -24,10 +27,23 @@ function ChooseAvailability() {
     return dates;
   };
 
+  //grabs times from range passed by ChooseDateTime
+  const getTimesInRange = (start, end) => {
+    const times = [];
+    const startTime = new Date(`1970-01-01T${start}:00`);
+    const endTime = new Date(`1970-01-01T${end}:00`);
+  
+    while (startTime <= endTime) {
+      times.push(startTime.toTimeString().split(' ')[0].substring(0, 5));
+      startTime.setHours(startTime.getHours() + 1); // Increment by 1 hour
+    }
+  
+    return times;
+  };
+
   const dates = getDatesInRange(startDate, endDate);
-  // Example dates and times for rows and columns
-  // const dates = ["2024-10-27", "2024-10-28", "2024-10-29", "I am a monkey", "Bonkers"];
-  const times = ["08:00", "10:00", "12:00", "14:00", "16:00"];
+  const times = getTimesInRange(startTime, endTime);
+
 
   // Event handlers
   const handleMouseDown = (cellId) => {

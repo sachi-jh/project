@@ -14,25 +14,31 @@ import 'react-clock/dist/Clock.css';
 
 
 function ChooseDateTime() {
-    //const dayjs = require('dayjs')
-    const [startDate, setStartDate] = useState(new Date());
-    const [endDate, setEndDate] = useState(new Date());
+        //const dayjs = require('dayjs')
+        const [startDate, setStartDate] = useState(new Date());
+        const [endDate, setEndDate] = useState(new Date());
 
-    const [startTime, setStartTime] = useState('10:00');
-    const [value, onChange] = useState('10:00');
+        const [startTime, setStartTime] = useState('10:00');
+        const [value, onChange] = useState('10:00');
 
-    const navigate = useNavigate();
+        const navigate = useNavigate();
 
-const handleNavigation = () => {
-  navigate("/chooseAvailability", {
-    state: {
-      startDate: startDate,
-      endDate: endDate,
-      startTime: startTime,
-      endTime: value,
-    },
-  });
-};
+        const handleNavigation = () => {
+        //error checking
+        if ((startTime > value) || (startDate > endDate)) {
+                alert("Please choose a valid date or time range.");
+                return;
+        }
+
+        navigate("/chooseAvailability", {
+        state: {
+        startDate: startDate,
+        endDate: endDate,
+        startTime: startTime,
+        endTime: value,
+        },
+        });
+        };
 
 return (
     <div>
