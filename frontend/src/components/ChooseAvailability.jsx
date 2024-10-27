@@ -11,9 +11,22 @@ function ChooseAvailability() {
   const [selectedCells, setSelectedCells] = useState(new Set());
   const [isSelecting, setIsSelecting] = useState(false);
 
+  const getDatesInRange = (start, end) => {
+    const date = new Date(start);
+    const endDate = new Date(end);
+    const dates = [];
 
+    while (date <= endDate) {
+      dates.push(new Date(date).toISOString().split('T')[0]);
+      date.setDate(date.getDate() + 1);
+    }
+
+    return dates;
+  };
+
+  const dates = getDatesInRange(startDate, endDate);
   // Example dates and times for rows and columns
-  const dates = ["2024-10-27", "2024-10-28", "2024-10-29", "I am a monkey", "Bonkers"];
+  // const dates = ["2024-10-27", "2024-10-28", "2024-10-29", "I am a monkey", "Bonkers"];
   const times = ["08:00", "10:00", "12:00", "14:00", "16:00"];
 
   // Event handlers
