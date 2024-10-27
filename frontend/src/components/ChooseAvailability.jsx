@@ -1,14 +1,19 @@
 import React from 'react'
 import { useState } from 'react'
+import { useLocation } from 'react-router-dom'
 import './ChooseAvailabilty.css'
 
 //to choose the times availavle from that table idk how to make that :(
 function ChooseAvailability() {
-    const [selectedCells, setSelectedCells] = useState(new Set());
+  const location = useLocation();
+  const { startDate, endDate, startTime, endTime } = location.state;
+  console.log({ startDate, endDate, startTime, endTime });
+  const [selectedCells, setSelectedCells] = useState(new Set());
   const [isSelecting, setIsSelecting] = useState(false);
 
+
   // Example dates and times for rows and columns
-  const dates = ["2024-10-27", "2024-10-28", "2024-10-29"];
+  const dates = ["2024-10-27", "2024-10-28", "2024-10-29", "I am a monkey", "Bonkers"];
   const times = ["08:00", "10:00", "12:00", "14:00", "16:00"];
 
   // Event handlers
@@ -38,6 +43,7 @@ function ChooseAvailability() {
 
 
   return (
+    
     <>
     <div onMouseUp={handleMouseUp}>
       <table>
