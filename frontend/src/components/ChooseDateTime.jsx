@@ -4,7 +4,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import dayjs from "dayjs";
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import DatePicker from "react-datepicker";
 import TimePicker from 'react-time-picker';
 import "react-datepicker/dist/react-datepicker.css";
@@ -20,6 +20,19 @@ function ChooseDateTime() {
 
     const [startTime, setStartTime] = useState('10:00');
     const [value, onChange] = useState('10:00');
+
+    const navigate = useNavigate();
+
+const handleNavigation = () => {
+  navigate("/chooseAvailability", {
+    state: {
+      startDate: startDate,
+      endDate: endDate,
+      startTime: startTime,
+      endTime: value,
+    },
+  });
+};
 
 return (
     <div>
@@ -43,19 +56,7 @@ return (
                     <TimePicker onChange={onChange} value={value} maxDetail='hour' disableClock={true} />
             </div>
             <div>        
-                    <Link
-                            to={{
-                                    pathname: "/chooseAvailability",
-                                    state: {
-                                            startDate: startDate,
-                                            endDate: endDate,
-                                            startTime: startTime,
-                                            endTime: value
-                                    }
-                            }}
-                    >
-                            Go to Choose Availability
-                    </Link>
+            <button onClick={handleNavigation}>Go to Choose Availability</button>
             </div>
     </div>
 )
