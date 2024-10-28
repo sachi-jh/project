@@ -88,6 +88,16 @@ function ChooseAvailability() {
       console.error(error);
       alert('Error creating event');
     }
+    navigate("/showAvailability", {
+      state: {
+      eventName: eventName,
+      userName: userName,
+      startDate: startDate,
+      endDate: endDate,
+      startTime: startTime,
+      endTime: value,
+      },
+      });
   };
 
 
