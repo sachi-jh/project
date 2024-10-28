@@ -9,7 +9,7 @@ function ChooseAvailability() {
 
   // Example dates and times for rows and columns
   const dates = ["2024-10-27", "2024-10-28", "2024-10-29"];
-  const times = ["08:00", "10:00", "12:00", "14:00", "16:00"];
+  const times = ["08:00 AM", "10:00 AM", "12:00 PM", "2:00 PM", "4:00 PM"];
 
   // Event handlers
   const handleMouseDown = (cellId) => {
@@ -39,6 +39,7 @@ function ChooseAvailability() {
 
   return (
     <>
+    <h1>Choose your availability</h1>
     <div onMouseUp={handleMouseUp}>
       <table>
         <thead>
