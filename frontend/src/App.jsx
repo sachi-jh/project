@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import ChooseDateTime from './components/ChooseDateTime'
 import './App.css'
 import ChooseAvailability from './components/ChooseAvailability'
+import CreateEvent from './components/CreateEvent'
 
 function App() {
   
@@ -11,6 +12,7 @@ function App() {
     <>
       <Router>
         <Routes>
+        <Route path="/createEvent" element={<CreateEvent />} />
           <Route path="/" element={<ChooseDateTime />} />
           <Route path="/chooseAvailability" element={<ChooseAvailability />} />
         </Routes>
