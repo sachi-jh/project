@@ -1,12 +1,13 @@
 import React from 'react'
 import { useState } from 'react'
 import { useLocation } from 'react-router-dom'
+import axios from 'axios';
 import './ChooseAvailabilty.css'
 
 //to choose the times availavle from that table idk how to make that :(
 function ChooseAvailability() {
   const location = useLocation();
-  const { eventName, startDate, endDate, startTime, endTime } = location.state;
+  const { eventName, userName, startDate, endDate, startTime, endTime } = location.state;
   const [selectedCells, setSelectedCells] = useState(new Set());
   const [isSelecting, setIsSelecting] = useState(false);
 
@@ -68,7 +69,26 @@ function ChooseAvailability() {
       return newSelectedCells;
     });
   };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
+    const eventData = {
+      event_name: eventName,
+      availability: {
+        user: userName,
+        times: Array.from(selectedCells)
+      }
+    };
+
+    try {
+      const response = await axios.post('http://localhost:5000/api/submitAvailability/file', eventData);
+      console.log(response.data);
+      alert('Event created successfully!');
+    } catch (error) {
+      console.error(error);
+      alert('Error creating event');
+    }
+  };
 
 
   return (
@@ -102,8 +122,11 @@ function ChooseAvailability() {
               })}
             </tr>
           ))}
+
         </tbody>
       </table>
+      <button onClick={handleSubmit}>Submit</button>
+
     </div>
     
     </>

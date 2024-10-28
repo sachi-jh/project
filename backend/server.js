@@ -51,6 +51,50 @@ app.post('/api/createEvent/file', async (req, res) => {
   }
 });
 
+app.post('/api/submitAvailability/file', async (req, res) => {
+    try {
+      const { event_name, availability } = req.body;
+      const availabilityArray = Array.isArray(availability) ? availability : [availability];
+
+      const filePath = path.join(__dirname, 'jsonStorage/events.json');
+      fs.readFile(filePath, 'utf8', (err, data) => {
+        if (err) {
+          console.error(err);
+          return res.status(500).json({ message: 'Server error' });
+        }
+  
+        const events = data ? JSON.parse(data) : [];
+        const eventIndex = events.findIndex(event => event.event_name === event_name);
+  
+        if (eventIndex === -1) {
+          return res.status(404).json({ message: 'Event not found' });
+        }
+  
+        // Add availability to the existing event
+        if (!events[eventIndex].availability) {
+          events[eventIndex].availability = [];
+        }
+
+        events[eventIndex].availability.push(...availabilityArray);
+  
+        fs.writeFile(filePath, JSON.stringify(events, null, 2), 'utf8', (err) => {
+          if (err) {
+            console.error(err);
+            return res.status(500).json({ message: 'Server error' });
+          }
+  
+          res.status(201).json({ message: 'Availability added successfully' });
+        });
+      });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Server error' });
+    }
+  });
+
+
+
+
 //if (process.env.NODE_ENV === "production") {
 if (true) {
   // static folder
