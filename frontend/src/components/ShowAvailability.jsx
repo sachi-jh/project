@@ -1,111 +1,109 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import './ShowAvailability.css';
 import { useLocation } from 'react-router-dom';
 
 function ShowAvailability() {
-  const location = useLocation();
-  //const { eventName, userName, startDate, endDate, startTime, endTime } = location.state;
-  const [events, setEvents] = useState([]);
-  const [dates, setDates] = useState([]);
-  const [times, setTimes] = useState([]);
-  const [availability, setAvailability] = useState({});
+   const [availabilityData, setAvailabilityData] = useState([]);
+   const [loading, setLoading] = useState(true);
+   const location = useLocation();
+   const { eventName } = location.state;
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get('/path/to/events.json');
-        const eventsData = response.data;
-        setEvents(eventsData);
+   useEffect(() => {
+      // Fetch data from the backend
+      const fetchAvailabilityData = async () => {
+         try {
+            const response = await axios.get('http://localhost:5000/api/events');
+            setAvailabilityData(response.data);
+         } catch (error) {
+            console.error("Error fetching availability data", error);
+         } finally {
+            setLoading(false);
+         }
+      };
 
-        if (eventsData.length > 0) {
-          const event = eventsData[0]; // Assuming we are displaying the first event
-          const startDate = new Date(event.startDateTime);
-          const endDate = new Date(event.endDateTime);
-          const datesInRange = getDatesInRange(startDate, endDate);
-          const timesInRange = getTimesInRange('00:00', '23:00'); // Assuming 24-hour range
+      fetchAvailabilityData();
+   }, []);
 
-          setDates(datesInRange);
-          setTimes(timesInRange);
+   if (loading) {
+      return <div>Loading...</div>;
+   }
+   const event = availabilityData.find((e) => e.event_name === eventName);
 
-          const availabilityMap = {};
-          event.availability.forEach(user => {
-            user.times.forEach(time => {
-              if (!availabilityMap[time]) {
-                availabilityMap[time] = [];
-              }
-              availabilityMap[time].push(user.user);
-            });
-          });
+   if (!event) {
+      return <div>No availability data found for the selected event.</div>;
+   }
 
-          setAvailability(availabilityMap);
-        }
-      } catch (error) {
-        console.error('Error fetching events:', error);
+   const startDate = new Date(event.startDateTime);
+   const endDate = new Date(event.endDateTime);
+
+   // Generate date range from startDate to endDate
+   const getDatesInRange = (start, end) => {
+      const dates = [];
+      const currentDate = new Date(start);
+      currentDate.setHours(0, 0, 0, 0);
+
+      while (currentDate <= end) {
+         dates.push(new Date(currentDate).toISOString().split('T')[0]);
+         currentDate.setDate(currentDate.getDate() + 1);
       }
-    };
+      return dates;
+   };
 
-    fetchData();
-  }, []);
+   const dates = getDatesInRange(startDate, endDate);
 
-  const getDatesInRange = (start, end) => {
-    const date = new Date(start);
-    const endDate = new Date(end);
-    const dates = [];
-    start.setHours(0, 0, 0, 0);
-    endDate.setHours(0, 0, 0, 0);
+   // Fixed time range from 9 AM to 11 PM
+   const getFixedTimes = () => {
+      const times = [];
+      for (let hour = 9; hour <= 23; hour++) {
+         const time = hour < 10 ? `0${hour}:00` : `${hour}:00`;
+         times.push(time);
+      }
+      return times;
+   };
 
-    while (date <= endDate) {
-      dates.push(new Date(date).toISOString().split('T')[0]);
-      date.setDate(date.getDate() + 1);
-    }
+   const times = getFixedTimes();
 
-    return dates;
-  };
+   // Map user availability to a set for quick lookup
+   const availableTimes = new Set();
+   event.availability.forEach(user => {
+      user.times.forEach(time => {
+         availableTimes.add(time);
+      });
+   });
 
-  const getTimesInRange = (start, end) => {
-    const times = [];
-    const startTime = new Date(`1970-01-01T${start}:00`);
-    const endTime = new Date(`1970-01-01T${end}:00`);
+   return (
+      <div>
+         <h1>Group Availability for {event.event_name}</h1>
+         <table>
+            <thead>
+               <tr>
+                  <th></th>
+                  {dates.map(date => (
+                     <th key={date}>{date}</th>
+                  ))}
+               </tr>
+            </thead>
+            <tbody>
+               {times.map(time => (
+                  <tr key={time}>
+                     <td>{time}</td>
+                     {dates.map(date => {
+                        const cellId = `${date}-${time}`;
+                        const isAvailable = availableTimes.has(cellId);
 
-    while (startTime <= endTime) {
-      times.push(startTime.toTimeString().split(' ')[0].substring(0, 5));
-      startTime.setHours(startTime.getHours() + 1); // Increment by 1 hour
-    }
-
-    return times;
-  };
-
-  return (
-    <div>
-      <h1>{} Availability</h1>
-      <table>
-        <thead>
-          <tr>
-            <th></th>
-            {dates.map((date) => (
-              <th key={date}>{date}</th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {times.map((time) => (
-            <tr key={time}>
-              <td>{time}</td>
-              {dates.map((date) => {
-                const cellId = `${date}-${time}`;
-                return (
-                  <td key={cellId} className="readonly">
-                    {availability[cellId] ? availability[cellId].join(', ') : ''}
-                  </td>
-                );
-              })}
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  );
+                        return (
+                           <td
+                              key={cellId}
+                              className={isAvailable ? "selected" : ""}
+                           ></td>
+                        );
+                     })}
+                  </tr>
+               ))}
+            </tbody>
+         </table>
+         </div>
+   );
 }
 
 export default ShowAvailability;

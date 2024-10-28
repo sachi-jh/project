@@ -92,7 +92,8 @@ app.post('/api/submitAvailability/file', async (req, res) => {
     }
   });
 
-app.get('/api/events', (req, res) => {
+
+  app.get('/api/events', (req, res) => {
     const filePath = path.join(__dirname, 'jsonStorage/events.json');
     fs.readFile(filePath, 'utf8', (err, data) => {
         if (err) {
@@ -104,16 +105,27 @@ app.get('/api/events', (req, res) => {
         res.status(200).json(events);
     });
 });
+/*
+app.get('/api/getAvailability/:eventName', (req, res) => {
+  const { eventName } = req.params;
+  const data = JSON.parse(fs.readFileSync('events.json'));
 
+  const event = data.find(event => event.event_name === eventName);
+  if (event) {
+      res.json(event);
+  } else {
+      res.status(404).json({ message: "Event not found" });
+  }
+});*/
 
 //if (process.env.NODE_ENV === "production") {
-if (true) {
-  // static folder
-  app.use(express.static("../frontend/dist/"));
+// if (true) {
+//   // static folder
+//   app.use(express.static("../frontend/dist/"));
 
-  // handle SPA
-  app.get(/.*/, (req, res) => res.sendFile("../frontend/dist/index.html"));
-}
+//   // handle SPA
+//   app.get(/.*/, (req, res) => res.sendFile("../frontend/dist/index.html"));
+// }
 
 const port = process.env.PORT || 5000 ;
 app.listen(port, () => console.log(`Listening to port ${port}`));

@@ -93,11 +93,11 @@ function ChooseAvailability() {
     navigate("/showAvailability", {
       state: {
       eventName: eventName,
-      userName: userName,
-      startDate: startDate,
-      endDate: endDate,
-      startTime: startTime,
-      endTime: endTime,
+      // userName: userName,
+      // startDate: startDate,
+      // endDate: endDate,
+      // startTime: startTime,
+      // endTime: endTime,
       },
       });
   };

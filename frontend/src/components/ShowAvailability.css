@@ -1,14 +1,35 @@
+/* ShowAvailability.css */
 table {
+    width: 100%;
     border-collapse: collapse;
   }
   
-  td, th {
+  th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+  }
+  
+  .available {
+    background-color: #4CAF50;
+  }
+  
+  .unavailable {
+    background-color: #f4f4f4;
+  }
+  
+  table {
+    border-collapse: collapse;
+ }
+ 
+ td, th {
     width: 60px;
     height: 30px;
     border: 1px solid #ccc;
     text-align: center;
-  }
-  
-  td.readonly {
-    background-color: #e0e0e0; /* Light gray to indicate read-only cells */
-  }
+ }
+ 
+ td.selected {
+    background-color: #90caf9; /* Color for available times */
+ }
+ 
