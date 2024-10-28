@@ -4,6 +4,7 @@ import ChooseDateTime from './components/ChooseDateTime'
 import './App.css'
 import ChooseAvailability from './components/ChooseAvailability'
 import CreateEvent from './components/CreateEvent'
+import ShowAvailability from './components/ShowAvailability'
 
 function App() {
   
@@ -15,6 +16,7 @@ function App() {
         <Route path="/createEvent" element={<CreateEvent />} />
           <Route path="/" element={<ChooseDateTime />} />
           <Route path="/chooseAvailability" element={<ChooseAvailability />} />
+          <Route path="/showAvailability" element={<ShowAvailability />} />
         </Routes>
       </Router>
       <div>
