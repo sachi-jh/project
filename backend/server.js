@@ -92,16 +92,27 @@ app.post('/api/submitAvailability/file', async (req, res) => {
     }
   });
 
+app.get('/api/events', (req, res) => {
+    const filePath = path.join(__dirname, 'jsonStorage/events.json');
+    fs.readFile(filePath, 'utf8', (err, data) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).json({ message: 'Server error' });
+        }
 
+        const events = data ? JSON.parse(data) : [];
+        res.status(200).json(events);
+    });
+});
 
 
 //if (process.env.NODE_ENV === "production") {
 if (true) {
   // static folder
-  app.use(express.static("C:\Users\acrob\Box\Classes\SE 3354\project-1\frontend\dist"));
+  app.use(express.static("../frontend/dist/"));
 
   // handle SPA
-  app.get(/.*/, (req, res) => res.sendFile("C:\Users\acrob\Box\Classes\SE 3354\project-1\frontend\dist\index.html"));
+  app.get(/.*/, (req, res) => res.sendFile("../frontend/dist/index.html"));
 }
 
 const port = process.env.PORT || 5000 ;
