@@ -73,8 +73,9 @@ function ChooseAvailability() {
 
   return (
     <>
-    <h1>{eventName}</h1>
       <div onMouseUp={handleMouseUp}>
+      <h1>{eventName}</h1>
+
         <table>
           <thead>
             <tr>
@@ -85,6 +86,7 @@ function ChooseAvailability() {
             </tr>
           </thead>
           <tbody>
+            {times.map((time) => (
               <tr key={time}>
                 <td>{time}</td>
                 {dates.map((date) => {
@@ -99,6 +101,7 @@ function ChooseAvailability() {
                   );
                 })}
               </tr>
+            ))}
           </tbody>
         </table>
         <button onClick={() => console.log(Array.from(selectedCells))}>Submit</button>
