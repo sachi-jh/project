@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import './ChooseAvailabilty.css';
+import './ShowAvailability.css';
+import { useLocation } from 'react-router-dom';
 
 function ShowAvailability() {
   const location = useLocation();
-  const { eventName, userName, startDate, endDate, startTime, endTime } = location.state;
+  //const { eventName, userName, startDate, endDate, startTime, endTime } = location.state;
   const [events, setEvents] = useState([]);
   const [dates, setDates] = useState([]);
   const [times, setTimes] = useState([]);
@@ -77,7 +78,7 @@ function ShowAvailability() {
 
   return (
     <div>
-      <h1>{event} Availability</h1>
+      <h1>{} Availability</h1>
       <table>
         <thead>
           <tr>
