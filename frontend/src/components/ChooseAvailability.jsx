@@ -1,6 +1,8 @@
 import React from 'react'
 import { useState } from 'react'
 import { useLocation } from 'react-router-dom'
+import { useNavigate } from "react-router-dom";
+
 import axios from 'axios';
 import './ChooseAvailabilty.css'
 
@@ -10,6 +12,7 @@ function ChooseAvailability() {
   const { eventName, userName, startDate, endDate, startTime, endTime } = location.state;
   const [selectedCells, setSelectedCells] = useState(new Set());
   const [isSelecting, setIsSelecting] = useState(false);
+  const navigate = useNavigate();
 
   //grabs dates from range passed by ChooseDateTime
   const getDatesInRange = (start, end) => {
@@ -83,7 +86,6 @@ function ChooseAvailability() {
     try {
       const response = await axios.post('http://localhost:5000/api/submitAvailability/file', eventData);
       console.log(response.data);
-      alert('Event created successfully!');
     } catch (error) {
       console.error(error);
       alert('Error creating event');
@@ -95,7 +97,7 @@ function ChooseAvailability() {
       startDate: startDate,
       endDate: endDate,
       startTime: startTime,
-      endTime: value,
+      endTime: endTime,
       },
       });
   };
