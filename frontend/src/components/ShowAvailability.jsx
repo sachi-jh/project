@@ -4,12 +4,12 @@ import { useLocation } from 'react-router-dom';
 
 function ShowAvailability() {
    const [availabilityData, setAvailabilityData] = useState([]);
+   const [hoveredUsers, setHoveredUsers] = useState([]);
    const [loading, setLoading] = useState(true);
    const location = useLocation();
    const { eventName } = location.state;
 
    useEffect(() => {
-      // Fetch data from the backend
       const fetchAvailabilityData = async () => {
          try {
             const response = await axios.get('http://localhost:5000/api/events');
@@ -63,46 +63,66 @@ function ShowAvailability() {
 
    const times = getFixedTimes();
 
-   // Map user availability to a set for quick lookup
-   const availableTimes = new Set();
-   event.availability.forEach(user => {
-      user.times.forEach(time => {
-         availableTimes.add(time);
-      });
-   });
+   // Event handler to show users when hovering over a cell
+   const handleMouseEnter = (cellId) => {
+      const usersAvailable = event.availability
+         .filter(user => user.times.includes(cellId))
+         .map(user => user.user);
+      setHoveredUsers(usersAvailable);
+   };
+
+   const handleMouseLeave = () => {
+      setHoveredUsers([]);
+   };
 
    return (
       <div>
          <h1>Group Availability for {event.event_name}</h1>
-         <table>
-            <thead>
-               <tr>
-                  <th></th>
-                  {dates.map(date => (
-                     <th key={date}>{date}</th>
-                  ))}
-               </tr>
-            </thead>
-            <tbody>
-               {times.map(time => (
-                  <tr key={time}>
-                     <td>{time}</td>
-                     {dates.map(date => {
-                        const cellId = `${date}-${time}`;
-                        const isAvailable = availableTimes.has(cellId);
-
-                        return (
-                           <td
-                              key={cellId}
-                              className={isAvailable ? "selected" : ""}
-                           ></td>
-                        );
-                     })}
+         <div style={{ display: 'flex' }}>
+            <table>
+               <thead>
+                  <tr>
+                     <th></th>
+                     {dates.map(date => (
+                        <th key={date}>{date}</th>
+                     ))}
                   </tr>
-               ))}
-            </tbody>
-         </table>
+               </thead>
+               <tbody>
+                  {times.map(time => (
+                     <tr key={time}>
+                        <td>{time}</td>
+                        {dates.map(date => {
+                           const cellId = `${date}-${time}`;
+                           const isAvailable = event.availability.some(user =>
+                              user.times.includes(cellId)
+                           );
+
+                           return (
+                              <td
+                                 key={cellId}
+                                 className={isAvailable ? "selected" : ""}
+                                 onMouseEnter={() => handleMouseEnter(cellId)}
+                                 onMouseLeave={handleMouseLeave}
+                              ></td>
+                           );
+                        })}
+                     </tr>
+                  ))}
+               </tbody>
+            </table>
+            <div style={{ marginLeft: '20px' }}>
+               <h3>Available Users</h3>
+               <ul>
+                  {hoveredUsers.length > 0 ? (
+                     hoveredUsers.map((user, index) => <li key={index}>{user}</li>)
+                  ) : (
+                     <li>No users available</li>
+                  )}
+               </ul>
+            </div>
          </div>
+      </div>
    );
 }
 
