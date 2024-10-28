@@ -16,6 +16,8 @@ import 'react-clock/dist/Clock.css';
 function ChooseDateTime() {
         const [eventName, setEventName] = useState('');
         const [startDate, setStartDate] = useState(new Date());
+        const [userName, setUserName] = useState('');
+
         const [endDate, setEndDate] = useState(new Date());
         const [startTime, setStartTime] = useState('10:00');
         const [value, onChange] = useState('10:00');
@@ -32,6 +34,7 @@ function ChooseDateTime() {
         navigate("/chooseAvailability", {
         state: {
         eventName: eventName,
+        userName: userName,
         startDate: startDate,
         endDate: endDate,
         startTime: startTime,
@@ -50,6 +53,16 @@ return (
             onChange={(e) => setEventName(e.target.value)}
             required
           />
+                <div>
+        <label>User Name:</label>
+        <input
+          type="text"
+          value={userName}
+          onChange={(e) => setUserName(e.target.value)}
+          required
+        />
+                </div>
+
         </div>
             <p>Choose date range</p>
             <div>

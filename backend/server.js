@@ -51,10 +51,11 @@ app.post('/api/createEvent/file', async (req, res) => {
   }
 });
 
-router.post('/api/submitAvailability/file', async (req, res) => {
+app.post('/api/submitAvailability/file', async (req, res) => {
     try {
       const { event_name, availability } = req.body;
-  
+      const availabilityArray = Array.isArray(availability) ? availability : [availability];
+
       const filePath = path.join(__dirname, 'jsonStorage/events.json');
       fs.readFile(filePath, 'utf8', (err, data) => {
         if (err) {
@@ -73,7 +74,8 @@ router.post('/api/submitAvailability/file', async (req, res) => {
         if (!events[eventIndex].availability) {
           events[eventIndex].availability = [];
         }
-        events[eventIndex].availability.push(...availability);
+
+        events[eventIndex].availability.push(...availabilityArray);
   
         fs.writeFile(filePath, JSON.stringify(events, null, 2), 'utf8', (err) => {
           if (err) {

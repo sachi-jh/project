@@ -7,7 +7,7 @@ import './ChooseAvailabilty.css'
 //to choose the times availavle from that table idk how to make that :(
 function ChooseAvailability() {
   const location = useLocation();
-  const { eventName, startDate, endDate, startTime, endTime } = location.state;
+  const { eventName, userName, startDate, endDate, startTime, endTime } = location.state;
   const [selectedCells, setSelectedCells] = useState(new Set());
   const [isSelecting, setIsSelecting] = useState(false);
 
@@ -73,10 +73,9 @@ function ChooseAvailability() {
     e.preventDefault();
 
     const eventData = {
-      
       event_name: eventName,
       availability: {
-        user: "dummyUser",
+        user: userName,
         times: Array.from(selectedCells)
       }
     };
