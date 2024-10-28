@@ -1,15 +1,48 @@
 import React from 'react'
 import { useState } from 'react'
+import { useLocation } from 'react-router-dom'
 import './ChooseAvailabilty.css'
 
-//to choose the times availavle from that table idk how to make that :(
+//to choose the times available from that table idk how to make that :(
 function ChooseAvailability() {
-    const [selectedCells, setSelectedCells] = useState(new Set());
+  const location = useLocation();
+  const { eventName, startDate, endDate, startTime, endTime } = location.state;
+  const [selectedCells, setSelectedCells] = useState(new Set());
   const [isSelecting, setIsSelecting] = useState(false);
 
-  // Example dates and times for rows and columns
-  const dates = ["2024-10-27", "2024-10-28", "2024-10-29"];
-  const times = ["08:00 AM", "10:00 AM", "12:00 PM", "2:00 PM", "4:00 PM"];
+  //grabs dates from range passed by ChooseDateTime
+  const getDatesInRange = (start, end) => {
+    const date = new Date(start);
+    const endDate = new Date(end);
+    const dates = [];
+    startDate.setHours(0, 0, 0, 0);
+    endDate.setHours(0, 0, 0, 0);
+
+    while (date <= endDate) {
+      dates.push(new Date(date).toISOString().split('T')[0]);
+      date.setDate(date.getDate() + 1);
+    }
+
+    return dates;
+  };
+
+  //grabs times from range passed by ChooseDateTime
+  const getTimesInRange = (start, end) => {
+    const times = [];
+    const startTime = new Date(`1970-01-01T${start}:00`);
+    const endTime = new Date(`1970-01-01T${end}:00`);
+  
+    while (startTime <= endTime) {
+      times.push(startTime.toTimeString().split(' ')[0].substring(0, 5));
+      startTime.setHours(startTime.getHours() + 1); // Increment by 1 hour
+    }
+  
+    return times;
+  };
+
+  const dates = getDatesInRange(startDate, endDate);
+  const times = getTimesInRange(startTime, endTime);
+
 
   // Event handlers
   const handleMouseDown = (cellId) => {
@@ -31,6 +64,7 @@ function ChooseAvailability() {
       const newSelectedCells = new Set(prevSelectedCells);
       if (newSelectedCells.has(cellId)) newSelectedCells.delete(cellId);
       else newSelectedCells.add(cellId);
+      console.log(newSelectedCells)
       return newSelectedCells;
     });
   };
@@ -39,42 +73,39 @@ function ChooseAvailability() {
 
   return (
     <>
-    <h1>Choose your availability</h1>
-    <div onMouseUp={handleMouseUp}>
-      <table>
-        <thead>
-          <tr>
-            <th></th>
-            {dates.map((date) => (
-              <th key={date}>{date}</th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {times.map((time) => (
-            <tr key={time}>
-              <td>{time}</td>
-              {dates.map((date) => {
-                const cellId = `${date}-${time}`;
-                return (
-                  <td
-                    key={cellId}
-                    className={selectedCells.has(cellId) ? "selected" : ""}
-                    onMouseDown={() => handleMouseDown(cellId)}
-                    onMouseEnter={() => handleMouseEnter(cellId)}
-                  ></td>
-                );
-              })}
+    <h1>{eventName}</h1>
+      <div onMouseUp={handleMouseUp}>
+        <table>
+          <thead>
+            <tr>
+              <th></th>
+              {dates.map((date) => (
+                <th key={date}>{date}</th>
+              ))}
             </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-    
+          </thead>
+          <tbody>
+              <tr key={time}>
+                <td>{time}</td>
+                {dates.map((date) => {
+                  const cellId = `${date}-${time}`;
+                  return (
+                    <td
+                      key={cellId}
+                      className={selectedCells.has(cellId) ? "selected" : ""}
+                      onMouseDown={() => handleMouseDown(cellId)}
+                      onMouseEnter={() => handleMouseEnter(cellId)}
+                    ></td>
+                  );
+                })}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        <button onClick={() => console.log(Array.from(selectedCells))}>Submit</button>
+      </div>
     </>
-
-    
-  )
+  );
 }
 
 export default ChooseAvailability
