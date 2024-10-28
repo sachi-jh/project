@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import './ChooseAvailabilty.css'
 
-//to choose the times available from that table idk how to make that :(
+//to choose the times availavle from that table idk how to make that :(
 function ChooseAvailability() {
   const location = useLocation();
   const { eventName, startDate, endDate, startTime, endTime } = location.state;
@@ -72,42 +72,44 @@ function ChooseAvailability() {
 
 
   return (
+    
     <>
-      <div onMouseUp={handleMouseUp}>
-      <h1>{eventName}</h1>
-
-        <table>
-          <thead>
-            <tr>
-              <th></th>
-              {dates.map((date) => (
-                <th key={date}>{date}</th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {times.map((time) => (
-              <tr key={time}>
-                <td>{time}</td>
-                {dates.map((date) => {
-                  const cellId = `${date}-${time}`;
-                  return (
-                    <td
-                      key={cellId}
-                      className={selectedCells.has(cellId) ? "selected" : ""}
-                      onMouseDown={() => handleMouseDown(cellId)}
-                      onMouseEnter={() => handleMouseEnter(cellId)}
-                    ></td>
-                  );
-                })}
-              </tr>
+    <div onMouseUp={handleMouseUp}>
+    <h1>{eventName}</h1>
+      <table>
+        <thead>
+          <tr>
+            <th></th>
+            {dates.map((date) => (
+              <th key={date}>{date}</th>
             ))}
-          </tbody>
-        </table>
-        <button onClick={() => console.log(Array.from(selectedCells))}>Submit</button>
-      </div>
+          </tr>
+        </thead>
+        <tbody>
+          {times.map((time) => (
+            <tr key={time}>
+              <td>{time}</td>
+              {dates.map((date) => {
+                const cellId = `${date}-${time}`;
+                return (
+                  <td
+                    key={cellId}
+                    className={selectedCells.has(cellId) ? "selected" : ""}
+                    onMouseDown={() => handleMouseDown(cellId)}
+                    onMouseEnter={() => handleMouseEnter(cellId)}
+                  ></td>
+                );
+              })}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+    
     </>
-  );
+
+    
+  )
 }
 
 export default ChooseAvailability
