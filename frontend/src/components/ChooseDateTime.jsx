@@ -3,7 +3,7 @@
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import dayjs from "dayjs";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import DatePicker from "react-datepicker";
 import TimePicker from 'react-time-picker';
@@ -11,9 +11,64 @@ import "react-datepicker/dist/react-datepicker.css";
 import 'react-time-picker/dist/TimePicker.css';
 import 'react-clock/dist/Clock.css';
 
-
+import axios from "axios";
 
 function ChooseDateTime() {
+    const [eventName, setEventName] = useState('');
+    const [userName, setUserName] = useState('');
+
+    const navigate = useNavigate();
+
+    const handleNavigation = () => {
+        // Error checking to ensure event name and username are not empty
+        if (!eventName || !userName) {
+            alert("Please provide both Event Name and User Name.");
+            return;
+        }
+
+        // Navigate to the chooseAvailability page with the event name and user name
+        navigate("/chooseAvailability", {
+            state: {
+                eventName: eventName,
+                userName: userName
+            }
+        });
+    };
+
+    return (
+        <div>
+            <div>
+                <label>Event Name:</label>
+                <input
+                    type="text"
+                    value={eventName}
+                    onChange={(e) => setEventName(e.target.value)}
+                    required
+                />
+            </div>
+
+            <div>
+                <label>User Name:</label>
+                <input
+                    type="text"
+                    value={userName}
+                    onChange={(e) => setUserName(e.target.value)}
+                    required
+                />
+            </div>
+
+            <div>
+                <button onClick={handleNavigation}>Go to Choose Availability</button>
+            </div>
+        </div>
+    );
+}
+
+export default ChooseDateTime;
+
+
+
+/*function ChooseDateTime() {
         const [eventName, setEventName] = useState('');
         const [startDate, setStartDate] = useState(new Date());
         const [userName, setUserName] = useState('');
@@ -90,4 +145,4 @@ return (
 )
 }
 
-export default ChooseDateTime
+export default ChooseDateTime*/
