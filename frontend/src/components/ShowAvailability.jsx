@@ -115,15 +115,11 @@ function ShowAvailability() {
                      ))}
                   </tr>
                   <tr>
-                     <th>Day Temp</th>
+                     <td>Day:<br></br>Night:</td>
                      {dates.map(date => (
-                        <th key={date}>{temperatureMap[date]?.day ?? 'N/A'}°F</th>
-                     ))}
-                  </tr>
-                  <tr>
-                     <th>Night Temp</th>
-                     {dates.map(date => (
-                        <th key={date}>{temperatureMap[date]?.night ?? 'N/A'}°F</th>
+                        <td key={date}>
+                           {temperatureMap[date]?.day ?? 'N/A'}°F <br></br> {temperatureMap[date]?.night ?? 'N/A'}°F
+                        </td>
                      ))}
                   </tr>
                </thead>
