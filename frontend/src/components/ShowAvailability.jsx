@@ -76,19 +76,34 @@ function ShowAvailability() {
 
    const times = getFixedTimes();
 
-   // Extract day and night temperatures
+   // Extract day and night temperatures and forecasts
    const temperatureMap = weatherData.reduce((acc, entry) => {
       const date = entry.startTime.split('T')[0];
       if (!acc[date]) {
-         acc[date] = { day: null, night: null };
+         acc[date] = { day: null, night: null, dayForecast: '', nightForecast: '' };
       }
       if (entry.isDaytime) {
          acc[date].day = entry.temperature;
+         acc[date].dayForecast = entry.shortForecast.toLowerCase();
       } else {
          acc[date].night = entry.temperature;
+         acc[date].nightForecast = entry.shortForecast.toLowerCase();
       }
       return acc;
    }, {});
+
+   // Determine the icon based on the forecast
+   const getWeatherIcon = (forecast) => {
+      if (forecast.includes('fair') || forecast.includes('sunny') || forecast.includes('clear')) {
+         return '☀️';
+      } else if (forecast.includes('cloud')) {
+         return '☁️';
+      } else if (forecast.includes('rain')) {
+         return '🌧️';
+      } else {
+         return '';
+      }
+   };
 
    // Event handler to show users when hovering over a cell
    const handleMouseEnter = (cellId) => {
@@ -115,10 +130,11 @@ function ShowAvailability() {
                      ))}
                   </tr>
                   <tr>
-                     <td>Day:<br></br>Night:</td>
+                     <td>Day:<br />Night:</td>
                      {dates.map(date => (
                         <td key={date}>
-                           {temperatureMap[date]?.day ?? 'N/A'}°F <br></br> {temperatureMap[date]?.night ?? 'N/A'}°F
+                           {temperatureMap[date]?.day ?? 'N/A'}°F {getWeatherIcon(temperatureMap[date]?.dayForecast)}<br />
+                           {temperatureMap[date]?.night ?? 'N/A'}°F {getWeatherIcon(temperatureMap[date]?.nightForecast)}
                         </td>
                      ))}
                   </tr>
