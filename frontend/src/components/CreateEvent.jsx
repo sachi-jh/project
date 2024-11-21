@@ -27,7 +27,7 @@ const CreateEvent = () => {
 
   return (
     <div>
-      <h1>Create Event</h1>
+      <h1 className='text-mossGreen'>Create Event</h1>
       <form onSubmit={handleSubmit}>
         <div>
           <label>Event Name:</label>

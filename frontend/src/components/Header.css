@@ -4,7 +4,7 @@
     align-items: center;  
     justify-content: center;  
     padding: 20px;  
-    background-color: #000F08; /* Night */  
+    background-color: #F4FFF8; /* Night */  
 }  
 
 .app-logo {  
@@ -14,5 +14,5 @@
 
 .app-title {  
     font-size: 1.8em;  
-    color: #F4FFF8; /* Mint cream */  
+    color: #000F08; /* Mint cream */  
 }

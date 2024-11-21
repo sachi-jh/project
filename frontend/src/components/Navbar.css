@@ -1,5 +1,5 @@
 .navbar {  
-  background-color: #000F08; /* Night */  
+  background-color: #ACC3B3; /* Night */  
   overflow: hidden;  
 }  
 
@@ -16,7 +16,7 @@
 
 .navbar li a {  
   display: block;  
-  color: #F4FFF8; /* Mint cream */  
+  color: #000F08; /* Mint cream */  
   text-align: center;  
   padding: 14px 16px;  
   text-decoration: none;  
