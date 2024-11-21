@@ -4,6 +4,7 @@ import { useLocation } from 'react-router-dom';
 
 function ShowAvailability() {
    const [availabilityData, setAvailabilityData] = useState([]);
+   const [weatherData, setWeatherData] = useState([]);
    const [hoveredUsers, setHoveredUsers] = useState([]);
    const [loading, setLoading] = useState(true);
    const location = useLocation();
@@ -16,17 +17,29 @@ function ShowAvailability() {
             setAvailabilityData(response.data);
          } catch (error) {
             console.error("Error fetching availability data", error);
+         }
+      };
+
+      const fetchWeatherData = async () => {
+         try {
+            const weatherResponse = await fetch('https://api.weather.gov/gridpoints/FWD/92,111/forecast');
+            const weatherData = await weatherResponse.json();
+            setWeatherData(weatherData.properties.periods);
+         } catch (error) {
+            console.error("Error fetching weather data", error);
          } finally {
             setLoading(false);
          }
       };
 
       fetchAvailabilityData();
+      fetchWeatherData();
    }, []);
 
    if (loading) {
       return <div>Loading...</div>;
    }
+
    const event = availabilityData.find((e) => e.event_name === eventName);
 
    if (!event) {
@@ -63,6 +76,17 @@ function ShowAvailability() {
 
    const times = getFixedTimes();
 
+   // Map weather data to dates
+   const weatherMap = weatherData.reduce((acc, entry) => {
+      const date = entry.startTime.split('T')[0];
+      const time = entry.startTime.split('T')[1].split('-')[0].slice(0, 5);
+      if (!acc[date]) {
+         acc[date] = {};
+      }
+      acc[date][time] = entry.shortForecast;
+      return acc;
+   }, {});
+
    // Event handler to show users when hovering over a cell
    const handleMouseEnter = (cellId) => {
       const usersAvailable = event.availability
@@ -97,6 +121,7 @@ function ShowAvailability() {
                            const isAvailable = event.availability.some(user =>
                               user.times.includes(cellId)
                            );
+                           const weather = weatherMap[date] && weatherMap[date][time] ? weatherMap[date][time] : 'No weather data';
 
                            return (
                               <td
@@ -104,7 +129,9 @@ function ShowAvailability() {
                                  className={isAvailable ? "selected" : ""}
                                  onMouseEnter={() => handleMouseEnter(cellId)}
                                  onMouseLeave={handleMouseLeave}
-                              ></td>
+                              >
+                                 {weather}
+                              </td>
                            );
                         })}
                      </tr>
