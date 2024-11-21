@@ -76,14 +76,17 @@ function ShowAvailability() {
 
    const times = getFixedTimes();
 
-   // Map weather data to dates
-   const weatherMap = weatherData.reduce((acc, entry) => {
+   // Extract day and night temperatures
+   const temperatureMap = weatherData.reduce((acc, entry) => {
       const date = entry.startTime.split('T')[0];
-      const time = entry.startTime.split('T')[1].split('-')[0].slice(0, 5);
       if (!acc[date]) {
-         acc[date] = {};
+         acc[date] = { day: null, night: null };
       }
-      acc[date][time] = entry.shortForecast;
+      if (entry.isDaytime) {
+         acc[date].day = entry.temperature;
+      } else {
+         acc[date].night = entry.temperature;
+      }
       return acc;
    }, {});
 
@@ -111,6 +114,18 @@ function ShowAvailability() {
                         <th key={date}>{date}</th>
                      ))}
                   </tr>
+                  <tr>
+                     <th>Day Temp</th>
+                     {dates.map(date => (
+                        <th key={date}>{temperatureMap[date]?.day ?? 'N/A'}°F</th>
+                     ))}
+                  </tr>
+                  <tr>
+                     <th>Night Temp</th>
+                     {dates.map(date => (
+                        <th key={date}>{temperatureMap[date]?.night ?? 'N/A'}°F</th>
+                     ))}
+                  </tr>
                </thead>
                <tbody>
                   {times.map(time => (
@@ -121,7 +136,6 @@ function ShowAvailability() {
                            const isAvailable = event.availability.some(user =>
                               user.times.includes(cellId)
                            );
-                           const weather = weatherMap[date] && weatherMap[date][time] ? weatherMap[date][time] : 'No weather data';
 
                            return (
                               <td
@@ -130,7 +144,6 @@ function ShowAvailability() {
                                  onMouseEnter={() => handleMouseEnter(cellId)}
                                  onMouseLeave={handleMouseLeave}
                               >
-                                 {weather}
                               </td>
                            );
                         })}
