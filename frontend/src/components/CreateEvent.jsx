@@ -5,29 +5,28 @@ const CreateEvent = () => {
   const [eventName, setEventName] = useState('');
   const [startDateTime, setStartDateTime] = useState('');
   const [endDateTime, setEndDateTime] = useState('');
+  const [city, setCity] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    const eventData = {
-      event_name: eventName,
-      startDateTime,
-      endDateTime,
-    };
-
     try {
-      const response = await axios.post('http://localhost:5000/api/createEvent/file', eventData);
-      console.log(response.data);
-      alert('Event created successfully!');
+      const newEvent = {
+        event_name: eventName,
+        startDateTime,
+        endDateTime,
+        city
+      };
+      await axios.post('http://localhost:5000/api/createEvent/file', newEvent);
+      alert('Event created successfully');
     } catch (error) {
-      console.error(error);
+      console.error('Error creating event', error);
       alert('Error creating event');
     }
   };
 
   return (
     <div>
-      <h1 className='text-mossGreen'>Create Event</h1>
+      <h2>Create Event</h2>
       <form onSubmit={handleSubmit}>
         <div>
           <label>Event Name:</label>
@@ -53,6 +52,15 @@ const CreateEvent = () => {
             type="datetime-local"
             value={endDateTime}
             onChange={(e) => setEndDateTime(e.target.value)}
+            required
+          />
+        </div>
+        <div>
+          <label>City:</label>
+          <input
+            type="text"
+            value={city}
+            onChange={(e) => setCity(e.target.value)}
             required
           />
         </div>

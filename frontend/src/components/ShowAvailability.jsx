@@ -20,9 +20,14 @@ function ShowAvailability() {
          }
       };
 
-      const fetchWeatherData = async () => {
+      const fetchWeatherData = async (city) => {
          try {
-            const weatherResponse = await fetch('https://api.weather.gov/gridpoints/FWD/92,111/forecast');
+            // Use a geocoding API to get the coordinates for the city
+            const geocodeResponse = await axios.get(`http://api.geonames.org/searchJSON?q=${city}&maxRows=1&username=acrobaticguy`);
+            console.log(geocodeResponse.data);
+
+            // Fetch weather data using the coordinates
+            const weatherResponse = await fetch(`https://api.weather.gov/points/${lat},${lng}/`);
             const weatherData = await weatherResponse.json();
             setWeatherData(weatherData.properties.periods);
          } catch (error) {
@@ -32,9 +37,16 @@ function ShowAvailability() {
          }
       };
 
-      fetchAvailabilityData();
-      fetchWeatherData();
-   }, []);
+      const fetchData = async () => {
+         await fetchAvailabilityData();
+         const event = availabilityData.find((e) => e.event_name === eventName);
+         if (event) {
+            await fetchWeatherData(event.city);
+         }
+      };
+
+      fetchData();
+   }, [eventName, availabilityData]);
 
    if (loading) {
       return <div>Loading...</div>;

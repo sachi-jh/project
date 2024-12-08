@@ -17,14 +17,14 @@ app.use(cors());
 
 app.post('/api/createEvent/file', async (req, res) => {
   try {
-      const { event_name, startDateTime, endDateTime } = req.body;
+      const { event_name, startDateTime, endDateTime, city } = req.body;
 
       const newEvent = {
           event_name,
           startDateTime,
           endDateTime,
+          city
       };
-
 
       const filePath = path.join(__dirname, '/jsonStorage/events.json');
       fs.readFile(filePath, 'utf8', (err, data) => {
