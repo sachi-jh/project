@@ -9,7 +9,25 @@ function ShowAvailability() {
    const [loading, setLoading] = useState(true);
    const location = useLocation();
    const { eventName } = location.state;
+   const fetchWeatherData2 = async (city) => {
+      try {
+         // Use a geocoding API to get the coordinates for the city
+         const geocodeResponse = await fetch(`http://api.geonames.org/searchJSON?q=richardson&maxRows=1&username=acrobaticguy`);
+         const geocodeJSON = await geocodeResponse.json();
+         const geocodeArray = geocodeJSON.find(0).json();
+         const lat = geocodeArray.lat;
+         const lng = geocodeArray.lng;
 
+         // Fetch weather data using the coordinates
+         const weatherResponse = await fetch(`https://api.weather.gov/gridpoints/FWD/92,111/forecast`);
+         const weatherData = await weatherResponse.json();
+         setWeatherData(weatherData.properties.periods);
+      } catch (error) {
+         console.error("Error fetching weather data", error);
+      } finally {
+         setLoading(false);
+      }
+   };
    useEffect(() => {
       const fetchAvailabilityData = async () => {
          try {
@@ -23,13 +41,13 @@ function ShowAvailability() {
       const fetchWeatherData = async (city) => {
          try {
             // Use a geocoding API to get the coordinates for the city
-            const geocodeResponse = await axios.get(`http://api.geonames.org/searchJSON?q=${city}&maxRows=1&username=acrobaticguy`);
-            console.log(geocodeResponse.data);
 
             // Fetch weather data using the coordinates
-            const weatherResponse = await fetch(`https://api.weather.gov/points/${lat},${lng}/`);
+            const weatherResponse = await fetch(`https://api.weather.gov/gridpoints/FWD/92,111/forecast`);
             const weatherData = await weatherResponse.json();
             setWeatherData(weatherData.properties.periods);
+            
+
          } catch (error) {
             console.error("Error fetching weather data", error);
          } finally {
@@ -57,6 +75,10 @@ function ShowAvailability() {
    if (!event) {
       return <div>No availability data found for the selected event.</div>;
    }
+
+   fetchWeatherData2();
+   // const lat = geocodeJSON.geonames..lat;
+   // const lng = geocodeJSON.geonames[1].lng;
 
    const startDate = new Date(event.startDateTime);
    const endDate = new Date(event.endDateTime);
