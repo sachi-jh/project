@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+/*import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useLocation } from 'react-router-dom';
 
@@ -130,9 +130,9 @@ function ShowAvailability() {
    );
 }
 
-export default ShowAvailability;
+export default ShowAvailability;*/
 
-/*import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useLocation } from 'react-router-dom';
 
@@ -154,14 +154,15 @@ function ShowAvailability() {
          }
       };
 
-      /*const fetchWeatherData = async (city) => {
+      const fetchWeatherData = async () => {
          try {
             // Use a geocoding API to get the coordinates for the city
-            const geocodeResponse = await axios.get(`http://api.geonames.org/searchJSON?q=${city}&maxRows=1&username=acrobaticguy`);
-            console.log(geocodeResponse.data);
+            //const geocodeResponse = await axios.get(`http://api.geonames.org/searchJSON?q=${city}&maxRows=1&username=acrobaticguy`);
+            //console.log(geocodeResponse.data);
 
             // Fetch weather data using the coordinates
-            const weatherResponse = await fetch(`https://api.weather.gov/points/${lat},${lng}/`);
+            //const weatherResponse = await fetch(`https://api.weather.gov/points/${lat},${lng}/`);
+            const weatherResponse = await fetch('https://api.weather.gov/gridpoints/FWD/92,111/forecast');
             const weatherData = await weatherResponse.json();
             setWeatherData(weatherData.properties.periods);
          } catch (error) {
@@ -171,16 +172,9 @@ function ShowAvailability() {
          }
       };
 
-      const fetchData = async () => {
-         await fetchAvailabilityData();
-         const event = availabilityData.find((e) => e.event_name === eventName);
-         //if (event) {
-         //   await fetchWeatherData(event.city);
-         //}
-      };
-
-      fetchData();
-   }, [eventName, availabilityData]);
+      fetchAvailabilityData();
+      fetchWeatherData();
+   }, []);
 
    if (loading) {
       return <div>Loading...</div>;
@@ -213,8 +207,12 @@ function ShowAvailability() {
    // Fixed time range from 9 AM to 11 PM
    const getFixedTimes = () => {
       const times = [];
-      for (let hour = 9; hour <= 23; hour++) {
-         const time = hour < 10 ? `0${hour}:00` : `${hour}:00`;
+      const startHour = startDate.getHours();
+      const endHour = endDate.getHours();
+
+      // Create time slots from start time to end time
+      for (let hour = startHour; hour <= endHour; hour++) {
+         const time = `${hour < 10 ? `0${hour}` : hour}:00`;
          times.push(time);
       }
       return times;
@@ -324,4 +322,4 @@ function ShowAvailability() {
    );
 }
 
-export default ShowAvailability;*/
+export default ShowAvailability;
