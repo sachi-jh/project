@@ -1,35 +1,33 @@
-/* ShowAvailability.css */
-table {
-    width: 100%;
-    border-collapse: collapse;
-  }
-  
-  th, td {
-    border: 1px solid #ddd;
-    padding: 8px;
-    text-align: center;
-  }
-  
-  .available {
-    background-color: #4CAF50;
-  }
-  
-  .unavailable {
-    background-color: #f4f4f4;
-  }
-  
-  table {
-    border-collapse: collapse;
- }
+table {  
+  width: 100%;  
+  border-collapse: collapse;  
+}  
+
+th, td {  
+  border: 1px solid #ddd;  
+  padding: 8px;  
+  text-align: center;  
+}  
+
+.available {  
+  background-color: #57886C; /* Viridian */  
+}  
+
+.unavailable {  
+  background-color: #F4D9CF; /* Pale Dogwood */  
+}  
+
+table {  
+  border-collapse: collapse;  
+}  
  
- td, th {
-    width: 60px;
-    height: 30px;
-    border: 1px solid #ccc;
-    text-align: center;
- }
+td, th {  
+  width: 60px;  
+  height: 30px;  
+  border: 1px solid #ccc;  
+  text-align: center;  
+}  
  
- td.selected {
-    background-color: #90caf9; /* Color for available times */
- }
- 
+td.selected {  
+  background-color: #A6C4B2; /* Ash gray */  
+}

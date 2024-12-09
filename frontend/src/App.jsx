@@ -6,6 +6,7 @@ import ChooseAvailability from './components/ChooseAvailability'
 import CreateEvent from './components/CreateEvent'
 import ShowAvailability from './components/ShowAvailability'
 import Navbar from './components/Navbar'
+import Header from './components/Header'
 
 function App() {
   
@@ -14,6 +15,7 @@ function App() {
     <>
     
       <Router>
+      <Header />
       <Navbar />
         <div>
         

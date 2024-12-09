@@ -1,14 +1,14 @@
-table {
-    border-collapse: collapse;
-  }
-  
-  td, th {
-    width: 60px;
-    height: 30px;
-    border: 1px solid #ccc;
-    text-align: center;
-  }
-  
-  td.selected {
-    background-color: #90caf9;
-  }
+table {  
+  border-collapse: collapse;  
+}  
+
+td, th {  
+  width: 60px;  
+  height: 30px;  
+  border: 1px solid #ccc;  
+  text-align: center;  
+}  
+
+td.selected {  
+  background-color: #A6C4B2; /* Ash gray */  
+}
