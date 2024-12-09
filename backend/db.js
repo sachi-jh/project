@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 
 
-const mongoURI = process.env.ATLAS_URI || ''; // Default to local MongoDB if no URI is provided
+const mongoURI = process.env.ATLAS_URI || 'mongodb+srv://shansalia367:5lPjImoutJCBSk6z@cluster0.7tqty.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0'; // Default to local MongoDB if no URI is provided
 
 // Function to connect to MongoDB
 const connectDB = async () => {
