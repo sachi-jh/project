@@ -16,7 +16,7 @@ function ChooseAvailability() {
   const navigate = useNavigate();
 
   // Fetch all events and find the one matching eventName
-  useEffect(() => {
+  /*useEffect(() => {
     const fetchEventDetails = async () => {
       try {
         const response = await axios.get('http://localhost:5000/api/events');
@@ -70,6 +70,54 @@ function ChooseAvailability() {
 
   const dates = eventDetails ? getDatesInRange(eventDetails.startDateTime, eventDetails.endDateTime) : [];
   const times = eventDetails ? getTimesInRange(eventDetails.startDateTime.split('T')[1], eventDetails.endDateTime.split('T')[1]) : [];
+*/
+const getDatesInRange = (start, end) => {
+  const startDate = new Date(start);
+  const endDate = new Date(end);
+  const dates = [];
+
+  while (startDate <= endDate) {
+    dates.push(new Date(startDate).toISOString().split('T')[0]);
+    startDate.setDate(startDate.getDate() + 1);
+  }
+
+  return dates;
+};
+
+const getTimesInRange = (start, end) => {
+  const startTime = new Date(start).getHours();
+  const endTime = new Date(end).getHours();
+  const times = [];
+
+  for (let hour = startTime; hour <= endTime; hour++) {
+    times.push(`${hour.toString().padStart(2, '0')}:00`);
+  }
+
+  return times;
+};
+
+useEffect(() => {
+  const fetchEventDetails = async () => {
+    try {
+      const response = await axios.get('http://localhost:5000/api/events');
+      const event = response.data.find((e) => e.event_name === eventName);
+
+      if (event) {
+        setEventDetails(event);
+      } else {
+        alert('Event not found');
+      }
+    } catch (error) {
+      console.error(error);
+      alert('Error fetching event details.');
+    }
+  };
+
+  fetchEventDetails();
+}, [eventName]);
+
+const dates = eventDetails ? getDatesInRange(eventDetails.startDateTime, eventDetails.endDateTime) : [];
+const times = eventDetails ? getTimesInRange(eventDetails.startDateTime, eventDetails.endDateTime) : [];
 
   // Event handlers for selecting availability
   const handleMouseDown = (cellId) => {
@@ -101,14 +149,12 @@ function ChooseAvailability() {
 
     const eventData = {
       event_name: eventName,
-      availability: {
-        user: userName,
-        times: Array.from(selectedCells)
-      }
+      username: userName, // Ensure the backend expects `username`
+      availability: Array.from(selectedCells) // Directly passing an array of times
     };
 
     try {
-      const response = await axios.post('http://localhost:5000/api/submitAvailability/file', eventData);
+      const response = await axios.post('http://localhost:5000/api/submitAvailability', eventData);
       console.log(response.data);
       navigate('/showAvailability', {
         state: { eventName }

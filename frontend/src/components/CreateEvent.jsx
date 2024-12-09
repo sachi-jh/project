@@ -14,9 +14,8 @@ const CreateEvent = () => {
         event_name: eventName,
         startDateTime,
         endDateTime,
-        city
       };
-      await axios.post('http://localhost:5000/api/createEvent/file', newEvent);
+      await axios.post('http://localhost:5000/api/createEvent', newEvent);
       alert('Event created successfully');
     } catch (error) {
       console.error('Error creating event', error);
@@ -52,15 +51,6 @@ const CreateEvent = () => {
             type="datetime-local"
             value={endDateTime}
             onChange={(e) => setEndDateTime(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <label>City:</label>
-          <input
-            type="text"
-            value={city}
-            onChange={(e) => setCity(e.target.value)}
             required
           />
         </div>

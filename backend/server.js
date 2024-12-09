@@ -3,17 +3,26 @@ import cors from "cors";
 import router from "./routes.js";
 import path from 'path';
 import fs from 'fs';
-import { fileURLToPath } from 'url';
+import { domainToASCII, fileURLToPath } from 'url';
 import { dirname } from 'path';
+import connectDB from './db.js';
+import Event from "./models/Event.js";
+import dotenv from 'dotenv';  // Import dotenv package
+
+dotenv.config();  // Load environment variables from .env file
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
-
+//const express = require('express');
+//const connectDB = require('./db'); // Import the database connection
+//const Event = require('./models/Event');
 
 const app = express();
 
 app.use(express.json());
 app.use(cors());
+
+connectDB(); // Connect to the database
 
 app.post('/api/createEvent/file', async (req, res) => {
   try {
