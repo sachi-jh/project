@@ -1,3 +1,7 @@
+  // written by: Caleb
+  // tested by: Sachi
+  // debugged by: Sachi, Caleb
+
 import express from "express";
 import cors from "cors";
 import router from "./routes.js";
@@ -83,26 +87,6 @@ app.post('/api/submitAvailability', async (req, res) => {
   }
 });
 
-/*app.post('/api/submitAvailability', async (req, res) => {
-  try {
-    const { event_name, availability } = req.body;
-    const availabilityArray = Array.isArray(availability) ? availability : [availability];
-
-    const event = await Event.findOne({ event_name });
-
-    if (!event) {
-      return res.status(404).json({ message: 'Event not found' });
-    }
-
-    event.availability.push(...availabilityArray);
-    await event.save();
-
-    res.status(201).json({ message: 'Availability added successfully', event });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Server error' });
-  }
-});*/
 app.get('/api/events', async (req, res) => {
   try {
     const events = await Event.find();

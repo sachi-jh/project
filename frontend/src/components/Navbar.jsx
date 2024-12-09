@@ -1,3 +1,6 @@
+  // written by: Sachi, Caleb
+  // tested by: caleb, Sandra
+  // debugged by: Caleb
 import React from 'react'
 import { Link } from 'react-router-dom'
 import './Navbar.css'

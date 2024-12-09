@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import ChooseDateTime from './components/ChooseDateTime'
-import './App.css'
 import ChooseAvailability from './components/ChooseAvailability'
 import CreateEvent from './components/CreateEvent'
 import ShowAvailability from './components/ShowAvailability'
