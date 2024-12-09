@@ -23,8 +23,112 @@ app.use(express.json());
 app.use(cors());
 
 connectDB(); // Connect to the database
+app.post('/api/createEvent', async (req, res) => {
+  console.log("Route /api/createEvent hit");
+  try {
+    const { event_name, startDateTime, endDateTime} = req.body;
+    //console.log("Request body:", req.body);
 
-app.post('/api/createEvent/file', async (req, res) => {
+
+    const newEvent = new Event({
+      event_name,
+      startDateTime,
+      endDateTime,
+      //availability: [], // Initialize an empty availability array
+    });
+
+    await newEvent.save();
+
+    res.status(201).json({ message: "Event created successfully", event: newEvent });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+app.post('/api/submitAvailability', async (req, res) => {
+  try {
+    const { event_name, username, availability } = req.body; // Add `username` to the request body
+    if (!event_name || !username || !availability) {
+      return res.status(400).json({ message: 'Missing required fields: event_name, username, or availability' });
+    }
+
+    // Ensure `availability` is an array
+    const availabilityArray = Array.isArray(availability) ? availability : [availability];
+
+    // Find the event
+    const event = await Event.findOne({ event_name });
+
+    if (!event) {
+      return res.status(404).json({ message: 'Event not found' });
+    }
+
+    // Check if the user already has availability submitted
+    const userAvailability = event.availability.find((entry) => entry.user === username);
+
+    if (userAvailability) {
+      // If user exists, append new times (avoiding duplicates)
+      userAvailability.times = [...new Set([...userAvailability.times, ...availabilityArray])];
+    } else {
+      // If user does not exist, add new user availability
+      event.availability.push({ user: username, times: availabilityArray });
+    }
+
+    // Save the updated event
+    await event.save();
+
+    res.status(201).json({ message: 'Availability added successfully', event });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+/*app.post('/api/submitAvailability', async (req, res) => {
+  try {
+    const { event_name, availability } = req.body;
+    const availabilityArray = Array.isArray(availability) ? availability : [availability];
+
+    const event = await Event.findOne({ event_name });
+
+    if (!event) {
+      return res.status(404).json({ message: 'Event not found' });
+    }
+
+    event.availability.push(...availabilityArray);
+    await event.save();
+
+    res.status(201).json({ message: 'Availability added successfully', event });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});*/
+app.get('/api/events', async (req, res) => {
+  try {
+    const events = await Event.find();
+    res.status(200).json(events);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+app.get('/api/getAvailability/:eventName', async (req, res) => {
+  try {
+    const { eventName } = req.params;
+    const event = await Event.findOne({ event_name: eventName });
+
+    if (!event) {
+      return res.status(404).json({ message: 'Event not found' });
+    }
+
+    res.status(200).json(event.availability);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+/*app.post('/api/createEvent/file', async (req, res) => {
   try {
       const { event_name, startDateTime, endDateTime, city } = req.body;
 
@@ -113,7 +217,7 @@ app.post('/api/submitAvailability/file', async (req, res) => {
         const events = data ? JSON.parse(data) : [];
         res.status(200).json(events);
     });
-});
+});*/
 /*
 app.get('/api/getAvailability/:eventName', (req, res) => {
   const { eventName } = req.params;

@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 const availabilitySchema = new mongoose.Schema({
   user: { type: String, required: true },
-  times: [{ type: Date, required: true }],
+  times: [{ type: String, required: true }],
 });
 
 const eventSchema = new mongoose.Schema({
