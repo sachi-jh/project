@@ -24,7 +24,7 @@ const router = express.Router();
 //     }
 // });
 
-router.post('/api/events/file', async (req, res) => {
+/*router.post('/api/events/file', async (req, res) => {
     try {
         const { event_name, startDateTime, endDateTime } = req.body;
 
@@ -58,5 +58,5 @@ router.post('/api/events/file', async (req, res) => {
         res.status(500).json({ message: "Server error" });
     }
 });
-
+*/
 export default router;
